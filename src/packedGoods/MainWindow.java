@@ -1,4 +1,4 @@
-package changemyname;
+package packedGoods;
 
 import static sbcc.Core.*;
 
@@ -11,7 +11,7 @@ import static java.lang.System.*;
 import static org.apache.commons.lang3.StringUtils.*;
 import javax.swing.border.LineBorder;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements CountChangedListener {
 
 	private JPanel panel;
 	private JButton btnIncrement;
@@ -23,6 +23,9 @@ public class MainWindow extends JFrame {
 
 
 	public MainWindow() {
+
+		// My object
+		MyCounter myCounter = new MyCounter();
 
 		panel = new JPanel();
 		panel.setBackground(new Color(0, 0, 205));
@@ -40,7 +43,8 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				do_btnIncrement_actionPerformed(e);
+				do_btnIncrement_actionPerformed(e, myCounter);
+				// do_btnIncrement_actionPerformed(e);
 			}
 
 		});
@@ -48,7 +52,9 @@ public class MainWindow extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == KeyEvent.VK_ENTER)
-					do_btnIncrement_actionPerformed(null);
+					do_btnIncrement_actionPerformed(null, myCounter);
+				// how was this block of code supposed to help?
+				// do_btnIncrement_actionPerformed(null);
 			}
 		});
 
@@ -65,11 +71,26 @@ public class MainWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(320, 240);
 
+		// My code
+		myCounter.addCountChangedListerner(this);
 	}
 
 
-	protected void do_btnIncrement_actionPerformed(ActionEvent e) {
+	// button handler for increment
+	protected void do_btnIncrement_actionPerformed(ActionEvent e, MyCounter paramMyCounter) {
 		println("Button Clicked");
+		paramMyCounter.increment();
+
 	}
 
+
+	// access MyCounter's count variable to update the label on MainWinow
+	@Override
+	public void countChanged(MyCounter paramMyCounter) {
+
+		int numToReturnX = paramMyCounter.count;
+		String newCount = String.valueOf(numToReturnX);
+
+		label.setText(newCount);
+	}
 }
